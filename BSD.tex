@@ -1,0 +1,319 @@
+\documentclass[9pt]{amsart}
+
+\usepackage{amsmath, tikz-cd, musixtex, amsthm, chngcntr}
+\usepackage[mathscr]{eucal}
+\usepackage{mathrsfs}
+\DeclareMathAlphabet{\eucal}{U}{eus}{m}{n}
+% Swap: \mathcal becomes Euler, \texcal becomes Latin Modern
+\let\texcal\mathcal
+
+\usepackage{graphicx}
+\usepackage[protrusion=true,expansion=true]{microtype}
+
+\makeatletter
+\renewcommand{\[}{\begin{equation}}
+\renewcommand{\]}{\end{equation}}
+\makeatother
+
+\counterwithout{equation}{section}
+\renewcommand{\theequation}{\arabic{equation}}
+
+\newcommand{\wih}{\widehat}
+\newcommand{\wt}{\widetilde}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\B}{\mathbb{B}}
+\newcommand{\fq}{\mathbb{F}_q}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\mfk}{\mathfrak}
+\newcommand{\tx}{\mathrm}
+\newcommand{\tbf}{\mathbf}
+\newcommand{\tc}{\mathcal}
+\newcommand{\ck}{\check}
+\newcommand{\on}{\operatorname}
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[subsection]
+\newtheorem*{thm*}{Theorem}
+\newtheorem*{mainthm}{Main Theorem}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem*{cor*}{Corollary}
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{sublem}[thm]{Sublemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{prop-const}[thm]{Proposition-Construction}
+\newtheorem{exer}[thm]{Exercise}
+\newtheorem{conj}{Conjecture}[subsection]
+\newtheorem*{conj*}{Conjecture}
+\newtheorem*{mainconj}{Main Conjecture}
+\newtheorem*{princ*}{Principle}
+
+\newtheorem{introthm}{Theorem}
+\renewcommand{\theintrothm}{\Alph{introthm}}
+
+\theoremstyle{remark}
+\newtheorem{rem}[thm]{Remark}
+\newtheorem{example}[thm]{Example}
+
+\newtheorem{counterexample}[thm]{Counterexample}
+\newtheorem{defin}[thm]{Definition}
+\newtheorem{claim}[thm]{Claim}
+\newtheorem{notation}[thm]{Notation}
+\newtheorem{warning}[thm]{Warning}
+\newtheorem{variant}[thm]{Variant}
+\newtheorem{question}[thm]{Question}
+\newtheorem{construction}[thm]{Construction}
+\newtheorem{terminology}[thm]{Terminology}
+\newtheorem{convention}[thm]{Convention}
+
+
+\title[Proof of BSD]{The full unabridged proof of the Birch and Swinnerton-Dyer conjecture.}
+\author{İbrahim Mustafa}
+\date{June 10, 2025}
+
+
+\begin{document}
+Warning: This paper is a canary/prerelease build. Any mention of full, unabridged or complete is subject to completion in later time and should be ignored by any reviewer or reader in sight. All claims that are incomplete, ambiguous, informal or at the very least deferred-of-proo will be corrected in the coming releases. I will make a forthcoming GitHub page to address that.
+\begin{abstract}
+This present paper will prove BSD and be formulated in revisions from v1 to the last version, in the following cases: $p$-adic, function fields, number fields. This includes both weak and strong BSD as the paper completely will estimate in about 16000 pages. We will ise frameworks from Damjan Penchev [Pen26a,b,c,d], Fargues-Scholze [FS21], and others.
+\end{abstract}
+\maketitle The BSD conjecture is a conjecture formulated in 1965 by Bryan J. Birch and Peter Swinnerton-Dyer to predict the ranks of elliptic curves of all number fields. Here this provides a full complete unabridged proof of all of the conjectures using advanced structural strategies.
+\subsection{Notational preamble}
+\begin{rem} Anytime we refer to an index of points on continuous spaces, we will adopt the notion of a discrete point space denoted by $|X|$ or similar, to emphasize that we are indexing discretely. Formal neighborhoods are indexed on the thickened discrete compactification denoted $\{ X \}$ where each $x \in X$ is a neighborhood $\{x\}$. For example, $x, *, \widehat{*}...$ is situated in $|X|$, and formal neighborhoods $\{x\}, \{*\}...$ are in $\{ X \}$. To add more detail, for a scheme $X$, $|X|$ is the fine space of points $x$ which generate a prime ideal in $\on{Spec} A$ (resp. an affine gluing of spectra). For analytic schemes in the sense of Grauert-Rammert or our sense, formal neighborhoods $\widehat{x}$ are local holomorphic functions and the like.
+\end{rem}
+ We will fix a rigid analytic group $G$ of dimension 2. and an elliptic curves $E/K$ over any field $K$ . For more generality, fix $X/K$ a curve. Then fix the sheaf $\mathscr{P}(D)$ denoted as the sheaf of points associated to $X$ with parent divisor $D$ such that the universal property of this sheaf is determined by the following: Fix an open set $U \subset X$ in the appropriate topology. Then for $\{P\} \subset U$:
+ \[\mathscr{P}(D; U) := \on{Span}(x_1,...,x_n)\] 
+ such that the set $\{x_1,...,x_n\}$ is a discrete realization of $\{P\}$ over $|X|$. We define the residue field associated to this span module as $\kappa_{\mathscr{P}}(D)$. In the case where we restrict to the stalk $\mathscr{P}_x$, it is given by the following: Fix an étale open $V$. Then:
+ \[\mathscr{P}_x(V) := \on{Span}(\{x\})\] 
+ given $\{x\} \subset |X|$ (analogue of $V$). Denote the residue-field structure of this stalk by $\kappa_{\mathscr{P}_x}(|V|)$. Note that we allow the use of $|V|$ instead of $\{x\}$ in case the reader may not understand.\\
+Let $K_x(D)$ be the pointwise field at $x$, given by the following:
+ \[\kappa_{\mathscr{P}}(D)/\mathfrak{m}_x\]
+ such tha $D$ is the parent divisor of $x$. Otherwise, we define the singular pointwise field $K_x$ as the field:
+ \[\kappa_{\mathscr{P}_x}(|V|)\]
+
+\begin{itemize}
+\item If $x$ is discrete (in $|X|$), $\mathfrak{m}_x$ is not infinitesimal, i.e. $\varprojlim_n K/\mathfrak{m}^n_x$ is generally not algebraically complete. Equivalently, $K_x$ (the singular pointwise field) is topologically discrete and countable.
+\item Otherwise, $K_x$ is thickened and $\on{Spf}(K_x)$ is formal wrt $x$ (resp. $x$-adic ideals)
+\item $K_x$ is equivalently constructible as the field where given any ideal $\langle x \rangle$, it is equal to:
+\[D_{\on{nef}} \cdot \langle x_0 \rangle\] 
+such that this condition is enforced when $x_0$ is a module element in $\mathscr{P}(D)$ (resp. $\mathscr{P}_x(V))$)
+where $x_0$ is a generic point in the generic fiber $X_{\eta}$.
+\end{itemize} 
+\begin{defin} 
+Let $X$ be an algebraic variety over $K$. For any $x \in X$, define the \textit{pointwise locus} of $X$, denoted $X_x$, as the scheme:
+\[X_x/S\]
+fixed over $S := \on{Spec} K_x$
+\end{defin}
+We define the same thing for algebraic and rigid analytic groups. It is the group scheme $G_x$ fixed over a base $S/G := (\on{Spec} R_x)/G$. With that settled, we define the lisse group $G^{\on{lis}}$ as the rigid analytic group:
+\[G_y(\mathbb{Q}_{\ell})\]
+where $y \in X'/U$ where $X'$ is a rigid analytic space (with base $U := \on{Spa}(\mathbb{Q}_{\ell}, \mathbb{Z}_{\ell})$) is a formal $\ell$-adic point.
+Furthermore, we assign the followings conditions for $G_x$:
+\begin{itemize}
+\item Given $x \in |X|$ (resp. $x \to |X|$) a geometric point, $G_x$ is discrete and $p$-divisible over the discrete topology of $|X|$.
+\item Given $x \in X$ a formal (resp. conventional scheme-theoretic) point, $G_x$ is Barsotti-Tate weight height $\geq 1$ (for the case of elliptic curves) or $G_x$ is profinite.
+\item $G_x$ is a rigid analytic group (relying on conditions 1 and 2 previously) precisely when either $x \in X(K)$ is $p$-torsion or the resulting space $|X|_x$ lives in an analogue of the $p$-adic fine topology.
+\item Similarly, $G_x$ is rigid analytic when $X_x$ is a formal scheme with base $\on{Spf}(K_p[[t]])$ such that this generalizes to convergent complex-analytic rings and their formal spectra.
+\end{itemize}
+We have the norm
+\[|\cdot|: |X| \to \mathbb{R}^+\]
+such that $|x|$ is the integral covolume at $|X|_x$
+\[\int_{|X|_x} 1_x \; dx\]
+As a rigorous addition, fix $X_x(K_x)$ as our initial space, where we construct the norm:
+\[|x| = \frac{1}{a|\mathbf{x}|+b} \int_{X_x} 1_D(x) dx\]
+given $a,b \in \mathbb{Z}^+$ variation and renormalization constants,
+where $\mathbf{x}$ is the identity point on $X$ (resp, $n$-torsion for abelian varieties) and $1_D(x)$ is the trivial divisor Identity function, which is: 
+\[|\mathbf{x} \to D|\]
+As convention, we will denote the field(s) of formal power series with convergence, divergence, norm and other functional analytic properties, by $L\{t\}$. 
+\section{Preliminaries}
+Our first definition arises now. But before that, fix $L$ a perfect coefficient number field.
+\subsection{Locally perfectoid analytic spaces} The classical description of perfectoid spaces is a rigid analytic space isomorphic to a union and pro-étale cover of perfectoid affinoid spaces of the form $\on{Spa}(R, R^+)$ such that the Frobenius map over $R^{\circ}/p$ is surjective. However, this is not enough for the construction of $L$-functions. So, ee define the notion of a formal analytic algebra $B$ as an algebra of functions over $L\{ t \}$
+\begin{defin}
+Let $B$ be a complete $L\{t\}$-subalgebra of functions such that they are closed under $p$-adic differential operators ($C^{\infty}$ algebras). Then it is a \textbf{formal analytic algebra} if $f(t)$ is unbounded. Moreover, an equivalent definition of $B$ is the complete $L\{t\}$-subalgebra of “meromorphic” functions on the unit polydisk.
+\end{defin}
+We denote the formal analytic spectrum by $\on{Spm} B$ as the space of prime ideals associated to the ring $W_{L\{t\}}(B)$ where we take the Witt vectors with coefficients in $L$. 
+\begin{defin}
+Let $(X, \eucal{O}_X)$ be a locally ringed space. Then $(X, \eucal{O}_X)$ is a \textbf{locally perfectoid space} if it satisfies the following axiom:
+$$\coprod_{i\in I} (U, \mathcal{O}_U) \to \text{Spa}(B/p, B^+/p)$$
+ Furthermore, the tilting $X^{\flat}$ is defined as the formal analytic space isomorphic to:
+\[\on{Spm} W_{\mathbb{C}_p\{t\}}(B)/p^{\infty}\]
+where we endow the tilting equivalence
+\[X \simeq (X^{\flat})^{\sharp}\]
+\end{defin}
+\subsection{The formal complex model of a locally perfectoid analytic space}
+We also define the complex model $\on{Spm}(B)_{\mathbb{C}}$ as the object: 
+\[\on{Spm}\mathbb{C}\{t\}/(f_1,...,f_n)\].
+However, it is not enough. 
+This formal analytic space will be denoted $X^+$. To construct the regular complex model of $X$ which is locally $\on{Spm}(B)$, take the following fiber product over $\mathscr{Y} := \on{Spec}L[\![t]\!]$:
+\[X^{\on{ca}} := X \times_{\mathscr{Y}} X^+\]
+so it is now realized as a pro-étale covering of locally perfectoid spaces: 
+\[\on{Spm}L\{t\} \to X/\mathscr{Y}\] 
+Later we will show that this construction can be applied as a base for mixed analytic schemes and mixed analytic stacks (as a fusion between Clausen-Scholze's analytic spaces and our sense of analytic spaces).
+\subsection{Formally analytic spaces.}
+In our notion of locally perfectoid spaces, we must now define a new type of analytic space to be used as a central analytic object. Luckily, we have our tools required to construct such a space. Firstly, let us state the complex model uniformization axiom. Given $\eucal{B} := \on{Spm} B$, we define the scheme $\eucal{B}_{\mathbb{C}} := \eucal{B} \times_{\mathscr{Y}} \on{Spm}(\mathbb{C} \{ t \})$ such that: 
+\[\on{uni}: \eucal{B} \hookrightarrow \eucal{B}_{\mathbb{C}}\]
+is injective.
+\begin{defin}
+Let $X$ be a locally perfectoid space over the $v$-site. We define a \textbf{formal analytic space} $Y$ with base $X$ as a space such that any local subset $(U, \eucal{O}_U)$, we set $X^{\circ}$ as the reduced general fiber of $X$ whose geometric space of points $|X|$ is a discrete manifold, there is a pro-étale complex analytic covering:
+$$\on{Spa} B \to Y \times_X \on{Spm} B$$
+given the functor $F : \on{Perf}_{\on{Spa B}} \to \on{FAS}$ where FAS is the formal analytic site.
+\end{defin}
+\subsection{Formalization of the rhombus} Fix $F$ a perfectoid number field.
+By convention, the completed group ring $R_F[G_x]$ is $(p, T, [x])$-adic where $[x]$ is a prime ideal in $\kappa(x)$.
+\begin{defin}
+Let $R_F$ be the Robba ring associated to $F$ and let $\Gamma$ be a cyclotomic Galois group. The rhombus $\triangle_A$ is then a free topological $R_F[G_x]$-algebra $O[G_x]$ equipped with:
+\begin{itemize}
+\item A semilinear frobenius endomorphism $\phi: O \to O$
+\item A continuous $\Gamma$-action 
+\item A monodromy operator $N: O \to O(-1)$ such that by convention: \[N\gamma = \gamma N\] for any $\gamma \in \Gamma$
+\item A submodule $O^0 \subset O[G_x]/(E)$ of Frobenius eigenvalues over $R_F$ which are isomorphic to finitrly generated $\mathbb{Z}[a_p]$-modules
+\end{itemize}
+\end{defin}
+Let us now define the next object, the perfect analytic rhombus. First, set $A \{ t \}$ as our target algebra. 
+\begin{defin}
+Given the rhombus $\triangle_A$, the perfect analytic rhombus $\triangle_A\{t\}$ is a free $R_F$-module equipped $O$ with:
+\begin{itemize}
+\item A semilinear frobenius endomorphism $\phi: O \to O$ with the dual Frobenius trace map $\psi: O \to R_F$ where:
+\[\psi: \hat{o} \mapsto \sum_n \hat{o}_n t^n\] where $\hat{o}$ is the Frobenius invariant $o \in O$
+\item A continuous $\Gamma$-action 
+\item A monodromy operator $N: O \to O(-1)$ such that by convention: \[N\gamma = \gamma N\] for any $\gamma \in \Gamma$
+\item A submodule $O^0 \subset O[G_x]\{T\}$ isomorphic to a finitely generated, $p$-adically compact $\mathbb{Z}_p[a_p]$-module.
+\end{itemize}
+\end{defin}
+We denote the category of rhombuses over a base field by $\on{Rh}_F$.
+\subsection{Rhombic spaces} 
+We now have formal analytic spaces under our belt. We define the structure sheaf $\eucal{O}$ (prior to defining rhombic spaces) as the sheaf of rhombuses $\triangle_O$. Our base $S_{\triangle}$ is going to be $\on{Spm} L[G_x]$ where $L$ is a free $R_F$-algebra.
+Nonetheless:
+\begin{defin} Let $(X, \eucal{O}_X)$ be a locally ringed space over $S := \on{Spm} B$ a formal analytic base. We say that $(X, \eucal{O}_X)$ is a rhombic space if for every open $(U, \eucal{O}_U)$, it admits a formal analytic étale atlas, for every $b$ in the Kottwitz set $B(G)$ (over a $\mathbb{Q}_p\{T\}$-extension):
+\[\coprod_{i\in I} U_i \to [\on{Spm} \triangle_B/G_{b}]\]. Fix $\iota: X \times_{\on{Spm} B} \on{Spm} \mathbb{C}\{t\} \to S_{\triangle}$
+Equivalently, the locally perfectoid covering is étale and analytic:
+\[\on{Spa} \triangle_B \to X \times_S \on{Spm} \triangle_B\]
+\end{defin}
+\subsection{Iwasawa-Robba model for rhombic spaces and specialization}
+Let $\texcal{X}$ be a rhombic space and fix $\eucal{A}^{\circ}$ to be the \textit{positive Robba annulus} defined as:
+\[\text{Spm} \mathbb{Q}_p\{t\}\]
+such that we define the canonical model $\texcal{X}^{\on{IR}}$ as:
+\[\mathbf{T}^* \texcal{X} \times_{\eucal{A}^{\circ}} \on{Spm}\mathbb{Z}_p\{T, T^{-1}\}_r\]
+where $\mathbf{T}^*(-)$ is a functor on the site $\text{Sch}^{\triangle}$:
+\[\on{Spm} B \mapsto \on{Spm}T^{\infty}(B, d\sigma)\] known as the \textbf{globally cotangent space} of $\texcal{X}$. 
+Note that $T^{\infty}(B, d\sigma)$ means the algebra of local sections of the cotangent bundle $T^* \on{Spm} B$.
+\section{A geometric picture of the construction of Hasse-Weil $L$-functions for an elliptic curve $E$ and its representations. Part I}
+\subsection{Specialization to $L$-functions, part I} We now specialize our attention to building the \textit{eigenvalue} space associated to the Frobenius operator. More specifically, the Iwasawa-Robba model of the Tate module rhombus over $\on{GL}_2$.For that, we need a new analytic construction of an eigenvariety. Classically and informally put, it is a rigid analytic space parameterizing systems of Hecke eigenvalues. However, as we will see later on, this needs a generalization to \textit{étale Frobenius eigenspaces} over $T_{\ell}(E)^{\vee}(1) \simeq H^1_{\text{ét}}(E, \underline{\mathbb{Q}_{\ell}})$. To do that though, we must consider one vital thing. Rename the (group) algebra $T_{\ell}(E)^{\vee}(1)$ to be $\mathbb{V}$. Now fix $\triangle_{\mathbb{V}}$ to be a rhombus with \textit{trace sub-algebra} $\mathbb{V}^+$. Note that; contrary to Definition 1.4.1, we may use a trace sub-algebra of $A$ instead of an ideal,\ generated by $\on{Tr} \varphi_p | A$. The object:
+\[\triangle_{\mathbb{V}}\{T, T^{-1}\}\] (with formal Iwasawa variable $T$ specialized to $p^{-s}$ when restricted to $A^+ := A/p$)\\
+An idea that comes to mind now is to reframe $\rho_E$, consider the group $G^{\text{ét}}(\mathbb{Q}_p)$ where $G^{\text{ét}}$ is the étale part of the rigid analytic group. For when $p \neq \ell$, we will use the following representation:
+\[\rho_E: G_{\mathbb{Q}_p}/I_p \to G^{\text{ét}}_x(\mathbb{Q}_p)\]
+Where $x \in E$ defines a local reduction $G_x$ such that it is rigid analytic only when $x$ is $p$-torsion, since $\on{Spa} C$ is a rigid analytic space of a Tate algebra $C$ over say $\mathbb{Q}_p$.
+Thus we can then state the Euler factor representation in geometric terms as the representation:
+\[\pi_E: \on{WD}_{\mathbb{Q}_{\ell}} \to \on{Aut}(\mathbb{V}[G^{\text{lis}}(\mathbb{Q}_{\ell})])\]
+We need to consider the reduction types of the elliptic curve aswell, as, for example, at multiplicative reduction, the local $L$-factor appears as:
+\[(1\pm T)^{-1}\]
+given that we specialize $T$ to be $p^{-s}$ for some $p$ prime. By abuse of notation, we may refer to a local specialization of $T$ as $t_p$. 
+Additive reduction simply yields the $L$-factor to be 1. However, good reduction gives us a quadratic term:
+\[(1 - a_p T + p{T^2})^{-1}\]
+equivalent to 
+\[(1- a_p p^{-s} + p^{1-2s})^{-1}\]
+\subsection{Specialization to $L$-functions, part II.} Now that we have reviewed the outline of how we construct (geometrically) the base $L$-factor, we must consider the rhombic space locally identified as the spectrum:
+\[S := \on{Spm} W_{\mathbb{Z}_p}(\triangle_{\mathbb{V}})\{T, T^{-1}\}\]
+which we will denote by $\texcal{X}_S$. The Iwasawa-Robba model of this space gives us the relevant $a_p$ we need, which we will denote by \[C(\texcal{X}_S)\] which is the space of analytic holomorphic functions associated to an open $[U] \subset \texcal{X}_S$\\
+Thus, this leads us to investigate the next part of our journey, how to formally construct such $a_p$ in geometric terms over $G$ with (thickened) local reduction being $\on{GL}_2(\mathbb{Q}_p)$.\\
+Fix a $G$-action on $\triangle_{\mathbb{V}}$ such that the associated Weil-Deligne representation:
+\[\pi_p: \on{WD}_{\mathbb{Q}_p} \to \on{Aut}
+\triangle_{\mathbb{V}}[G_x]\]
+(where $x \in E$ is not $p$-torsion), is supercuspidal at points of bad reduction and yields $\mathbb{V}[G_x]$ with Robba ring equivalent to the Robba ring of $L$-factors, cf. Section 2.1. This is for when $p \neq \ell$. For the case $p \neq \ell$, we use a special version of $\mathbb{V}$ denoted by $\mathbb{V}_{p=\ell}$ where the choice of $\ell$ or $p$ does not matter. Specifically, referring to the definition of the rhombus, it is a rhombus associated to the group:
+\[G_{x_0}(\mathbb{Q}_{\ell})\]
+where we construct a family of $(\rho, N, G_x)$-modules $V^{\rho, N}[G_x]$ where we have the module homomorphism:
+\[\triangle_{\mathbb{V}} \to \{V^{\rho, N}[G_x]\}\]
+which will extend to perfect analytic rhombi. Despite it using Robba rings and generation morphisms, it still requires perfect analytic rhombi \[\triangle_{V^{\rho, N}}[[T]]\] to natively incorporate generation morphisms into the structure.\\
+Following this notion, we define an open substack of the (analytic étale DM) stack of $G_x$-representations of $\triangle_{\mathbb{V}}$ by $\mathsf{Rep}^{\text{sp}}_{\triangle}
+(G_x)$.
+in other words, the inclusion of stacks: 
+\[\mathsf{Rep}^{\text{sp}}_{\triangle}
+(G_x) \subset \mathsf{Rep}^{\text{WD}}_{\triangle}
+(G_x)\]
+An important note for the reader: This is more accurate when considering the Emerton-Gee formalism for when we localize for $p \neq \ell$, However, we will construct such $(\varphi, \Gamma)$-modules later, as there need not to be cyclotomic action.\\
+To not cause loss of content, we will elaborate more on the $L$-packet side of the story. Consider the stack of Langlands parameters $\mathsf{Lan}^{\on{wd}}(G_x)$ indexed over a class $x \in |X|$ where $X$ is a given étale local model of $\texcal{X}_{S}$ (in other words identified as $S \times_{\eucal{A}} \{x\}$ for $x \in \texcal{X}_S$. Let $\mathsf{M}(G_{\eta})_{\mathbb{Z}_p}$ be the Dieudonné module of the $p$-divisibe local reduction of $G$ with extension of scalars to $\mathbb{Z}_p$-Robba rings. Then the stack of Langlands parameters in our sense, parameterizes the following objects:
+\[(\phi: \on{WD}_{\mathbb{Q}_p} \to G_x, \pi_{\phi}: \on{WD}_{\mathbb{Q}_p} \to \mathsf{M}(G_{\eta})_{\mathbb{Z}_p})\]
+This carries a map of group schemes:
+\[G \times_{\on{Sp}\mathbb{F}_p(\!(t)\!)} G_x(\mathbb{F}_p) \to G \times_{\on{Sp}\mathbb{Z}_p(\!(T)\!)} G_x(\mathbb{Z}_p)[p]\]
+Notice that this implies our third construction, the perfectoid Emerton-Gee stack. But for that to work, we need to identify a certain class of perfectoid spaces (example $Z$) to parametrize systems of mod $p$ Dieudonné modules. Luckily, we will set the structure sheaf $\eucal{O}_Z$
+to encode (topological rings of) Dieudonné modules of $G$. First, set the Dieudonné locus of $G$, denoted $\mathsf{G}$ as the fiber product:
+\[G_s \times_{[\on{Spa} \mathbb{Q_{\ell}}/G]} \on{Spm} R\]
+Then we define the object known as the Robba locus of $\on{Bun}_G$, denoted: 
+\[\on{Bun}^{\text{ro}}_G: \coprod_{\widehat{*} \in |\texcal{X}_S|} [\widehat{*}/\mathsf{G}_s]\]
+The indexing is over the discrete formal point space of $\texcal{X}_S$ (cf. the beginning of the paper)\\
+In the meantime, we define the Emerton-Gee stack $\texcal{X}^{\on{EG}}(G)_{[\eta]}$ as a stack over the site $\on{Perf}_Z$ such that $Z \simeq \on{Spm}(\mathsf{M}(G)\{T, T^{-1}\})$ over $\on{Spm} R$, parameterizing systems of étale and crystalline $(\varphi, \Gamma)$-modules. Fix $\Gamma$ a cyclotomic (resp. anticyclotomic) Galois group (over $F$). The $R$-points of this stack are
+\[(M, \varphi: M \to M, \varphi^+: M \to R, \rho_{\Gamma}: \Gamma \to \on{Aut}(M))\]  This construction is canonical over rhombuses. When indexing over a class of points $[\eta]$. Then we obtain the following discrete space of $R$-points that define the stack as:
+\[(M[G_{\eta}], \varphi: M[G] \to M[G_{\eta}], \varphi^+: M[G_{\eta}] \to R, \Gamma \to \on{Aut}(M[G_{\eta}]))\]
+For the case of rhombuses, an example is the isorhombic Emerton-Gee stack, denoted $\texcal{X}^{\on{EG}, [\rho]}(G)_{\triangle}$, whose $R[G]$-points are:
+\[(\triangle_M, \psi: \triangle_M\to \triangle_M, \psi^+: \triangle_M \to R, \Gamma \to \on{Aut}(\triangle_M)\] 
+Next we define the \textit{étale-local} Emerton-Gee stack denoted $\texcal{X}^{\on{EG}}(\mathsf{G}^{\on{lis}}_s)_{\on{cusp}}$, which is the corresponding fiber product étale formal group stack:
+\[\texcal{X}^{\on{EG}, [\rho]}(G_s) \times_{[\on{Spa} \mathbb{Q}_{\ell}/G^{\on{lis}}]} \on{Spa} R/\ell^k\]
+Once we have all of these, let $E_i$ denote a system of Frobenius eigenspaces such that:
+\[E_{i \in I} := \on{Eig}(\triangle_{\mathbb{V}, \mathsf{M}})\]
+for arbitrary $G_x$ with $x \in E$.\\
+Set $O_R$ as the local nonarchimedean ring associated to $R$ of $p$-adic interpolated complex analytic functions with $T \mapsto p^{-s}$.
+We then define the local rigid analytic variety $\mathscr{X}_{O_R, E}
+$ based on $S^+ := \on{Spm}(O_R)$ if $R := \triangle_{\mathbb{V}}\{T, T^{-1}\}$ such that any (formal) point (not to be confused with a point in $|\mathscr{X}_{O_R, E}$) parametrizes:
+\[(E_{i \in I}, \eucal{O}_{\mathscr{X}, [\![s]\!]})\]
+where $\eucal{O}_{\mathscr{X}, [\![s]\!]})$ is the stalk identified with a system of $O_R$-modules of (generalized) holomorphic functions of then form $a_n (t-1)^n$ approximating an Euler factor for given $[\![s]\!] \in S^+$.\\
+We denote such $\mathscr{X}_{O_R, E}$ as \textbf{Dieudonné eigenvarieties} over $R$. Recall that our isorhombic Emerton-Gee stack $\texcal{X}^{\on{EG}, \rho}(G)_{\triangle}$ generalizes this notion to lisse groups. Construct the map:
+\[\on{lis}_{G, O_R}: \texcal{X}^{\on{EG}, \rho}(G)_{\triangle} \to \texcal{X}^{\on{EG}, \rho}(\mathsf{G}^{\text{lis}})_{\triangle}\]
+where we fix a choice of $G^{\on{lis}}
+(\mathbb{Q}_{\ell})$-equivariance over $\on{lis}_{G, O_R}$. This will be lifted for the case $K$ is not an extension of $\mathbb{Q}$.\\
+Thus, the space of Euler factors is the abelian rigid analytic variety denoted:
+\[\mathscr{X}^{\wedge}_{O_R, E}(\mathsf{G}^{\on{lis}})\]
+Here the superscript $(-)^{\wedge}$ denote the dual locus of $\mathscr{X}$, which parametrizes:
+\[(E_i, \lambda_G: \mathsf{G}^{\on{lis}} \to \on{Aut}(M))\] when $M \subset \triangle_{\mathbb{V}}$ \\
+In relation to classical eigenvarieties seen in  MacDonald [McD25] and Newton [New24]'s papers, they use systems of Hecke eigenvalues attached to $p$-adic Galois representations. Analogously, we will use systems of Frobenius eigenvalues attached to (characteristic) $p$-adic (and then archimedean) Hodge-type representations of Dieudonné modules and Tate modules. The dual locus $\mathscr{X}^{\wedge}_{O_R, \mathsf{G}_s}$ over $[\on{Spm} R/\mathsf{G}]$ gives us a clear description of the eigenvariety construction for eigenvalues not associated to automorphic forms.\\
+Fix $\lambda_G: \mathsf{G} \to \on{Aut}(M)$ where we construct $\eucal{E}(\lambda_G)$, then,
+Fix the following morphism of eigenspaces:
+\[\eucal{E}_i(\lambda_G) \to \eucal{E}_i(\rho)\]
+such that its image is isomorphic over $O_R$ to the eigenspace $\eucal{E}_i(\mathsf{V})$.\\
+The usage of $\widehat{O_R}$ means that we work over: \[\varprojlim_{k} O_R/p^k\].\\
+
+We axiomatize that the weight space $\mathscr{W}_{O_R, E}$ has base $\on{Spm} \mathbb{V}^+ \otimes_R E$, such that we impose the eigenvariety condition:
+\[\tau: \mathscr{X}_{O_R, E} \to \mathscr{W}_{O_R/p, E}\]\\
+Completing the picture by gluing these pieces together, we obtain that the locus $\mathscr{X}^{\wedge}_{O_R, \mathsf{G}_s}$ admits the following map of rigid analytic varieties:
+\[\mathscr{X}^{\wedge}_{O_R, \mathsf{G}_s} \to \mathscr{W}_{O_R, E} \times_{\on{Spm} \mathbb{V}^+} \on{Sp} \widehat{O_R}\]
+where $\on{Sp} \widehat{O_R}$ denotes the Berkovich spectrum of $\widehat{O_R}$.\\
+Thus finally now entering the stage where we build the space of $p$-adic $L$-functions as a rigid analytic variety. Now fix $\rho_E$ reframed (cf. Section 2.1 ) and set $\pi_E$ as the Euler factor representation decomposing to $\mathsf{M}(G^{\on{lis}})$-equivariant subspaces $\mathsf{V}_{E_i(\rho), p}$. Recall that since we mapped $\eucal{E}_i(\lambda_G)$ to its neighboring $\eucal{E}_i(\rho)$, we can use the decomposition stated earlier to write:
+\[\eucal{E}_i(\rho) \simeq \bigotimes_{E_i(\rho)} \eucal{E}_i(\mathsf{V}_{E_i, p})\]
+indexing all equivariant subspaces associated to the reframed $\rho$.
+This implies that, with a little bit of work:
+\[\eucal{E}_i(\pi_E)_{\rho} \simeq \bigotimes_{E(\pi)} \eucal{E}_i(\mathsf{M}(G^{\on{lis}})_{O_R} \otimes \pi_E)\]
+With that settled, recall the definition of $\mathsf{Lan}^{\on{wd}}(G_x)$. Now, with the new addition of $\eucal{E}_i(\pi_E)_{\rho}$, we can briefly define the formal DM stack:
+\[\mathsf{Lan}^{\on{wd}}(G_x)_{\eucal{E}_i(\pi_E)_{\rho}}\]
+as the object:
+\[\mathsf{Lan}^{\on{wd}}(G_x) \times_{\on{Spm} \mathbb{V}} \mathscr{X}_{O_R/\mathfrak{p}, [b]}\]
+where $\mathscr{X}_{O_R/\mathfrak{p}, [b]}$ is the canonical integral model indexed by $[b] \in B(G_s)$, the Kottwitz set. 
+\subsection{Roadmap to cosntructing an $L$-function} We then emphasize that the earlier constructions are roadmapped to construct the following $L$-function:
+\[L(\rho, \pi_E, s)\]
+at $p$. This implies that we construct a function globally from fixing $[s] \in \on {Spm} \triangle_O$ as the local section:
+\[\Gamma(\mathsf{Lan}^{\on{wd}}(G_{[s]}), \eucal{O}_{\mathsf{Lan}^{\on{wd}}(G_{[s]})})\]
+We introduce the $G^{\on{lis}}$-equivariant map of (rigid) analytic stacks: 
+\[\mathfrak{e}_{G_x, [\triangle]}: \mathsf{Lan}^{\on{wd}}(G^{\on{lis}}_{[s]})^N \to \texcal{X}^{\on{EG}, [\pi]}(G^{\on{lis}})_{\triangle}\]
+such that the same functor wrapped in the derived category setting, which we will denote by $(\mathfrak{e}^N_{G_x, [\pi]})_!$, denoted:
+\[D_{\on{lis}}(\mathsf{Lan}^{\on{wd}}(G^{\on{lis}}_{[s]})^N, R_F) \to D_c(\texcal{X}^{\on{EG}, [\pi]}(G^{\on{lis}})_{\triangle}, \overline{\mathbb{Z}_{\ell}})\]
+The superscript $N$ implies we are working in the monodromy-free locus, where $\on{ker} N \subset \mathsf{Lan}^{\on{wd}}(G_y; R_{\mathbb{Q}_p})$ as the $R_{\mathbb{Q}_p}$-pointwise substack.
+İn the later sections of the paper, we will explain how the target of $(\mathfrak{e}^N_{G_x, [\pi]})_!$ directly allows the Emerton-Gee stack to base-change to its $\mathbb{Z}_{\ell}$-model vis the Dieudonné theorem associated to it (forthcoming). 
+Another ideal object to define is the moduli of rhombic spaces (more specifically, a stack parameterizing analytic rhombuses and their rhombic spaces when localized), as the functor:
+\[\texcal{R}_{G_x, [\eucal{E}(\pi)_{\infty}]}: \on{FAS}^{\triangle}
+/\on{Spm}(R_{\mathbb{Q}_p}) \times \on{Rh}_{F, [E_i]} \to \on{Ani}\]
+sending a pair:
+\[(X, \triangle_O(U) \otimes \eucal{O}_{X, x}(D_{\on{rig}}) \to \texcal{G}\]
+where the fibered groupoid $\texcal{G}$ parameterized rhombuses and their $G_y$-action on $\on{Spm} R_{\mathbb{Q}_p}$ for $y$ a rigid analytic point.\\
+The $!$-pushforward mechanism os determined to preserve $p$-adic elements and eliminate non-rigid analytic rhombuses in-between, the ULA version $(\mathfrak{e}^N_{G_x, [\pi]})_*$ does the opposite snd returns all Emerton-Gee points with open or formal support. Next, the geometric analytic stack of rhombuses must satisfy:
+\[D_{\on{lis}}(\texcal{R}_{G_x, [\eucal{E}(\pi)_{\infty}]}) \simeq D_{\text{ét}}(\texcal{X}^{\on{EG}, [\pi]}(G^{\on{lis}})_{\triangle})\] where étale sheaves on the Emerton-Gee stack translate to $\ell$-adic sheaves on the stack of Rhombuses. This will be proven by the base change and Iwasawa-theoretic specialization. Nonetheless, the general construction of an $L$-function associated to the pair $(\rho, \pi)$ can be precedent from these two notions, the first one being: 
+\begin{thm*}
+We present the following (to be proven in later sections) theorem: Let $\mathscr{X}_{O_R, [\eucal{E}(\pi)_{\triangle}]}$ be the (relative) Dieudonné eigenvariety associated to the system $[\eucal{E}(\pi)_{\triangle}]$ over the Huber pair $(R_{\mathbb{Q}_p}, R_{\mathbb{Z}_p})$ where $R_{(-)}$ denotes the Robba ring associated to a local field, then, there exists a canonical embedding:
+\[\mathscr{X}_{O_R, [\eucal{E}(\pi)_{\triangle}]}/G_y \hookrightarrow \texcal{R}_{G_y, [\eucal{E}(\pi)_{\triangle}]}(R_{\mathbb{Z}_p})\]
+\end{thm*}
+where we invoke the second notion: The space of $p$-adic $L$-functions is then the relative stack $\mathscr{X}^{\wedge}_{O_R, [\eucal{E}(\pi)]}(\mathsf{G}_{[b]}) \to \texcal{R}_{G^{\on{lis}}, [\eucal{E}(\pi)_{\triangle}]}$ where the points of this relative stack correspond to perfect analytic rhombuses of $\eucal{E}(\pi)$, defined as the system of Frobenius eigenvalues over $\pi$. with $\eucal{O}_{\mathcal{X}}$-modules associated to the local system $\eucal{E}(\pi)_{G(R_{\mathbb{Q}_{\ell}})}$ over $\mathscr{X}_{O_R, [\eucal{E}(\pi)_{\triangle}]}$ satisfying the above (to-be proven) theorem. The pointwise definition of this stack is the tuple:
+\[(\triangle_{\eucal{E}(\pi)}, \eucal{W}_x)\]
+where $\eucal{W}_x$ is the coherent sheaf with stalk $\eucal{E}(\pi)_{G(R_{\mathbb{Q}_{\ell}})}$ over a point of $[y/G]$ defining the weight-space sheaf analogue of $\mathscr{X}_{O_R, [\eucal{E}(\pi)_{\triangle}]}$.
+And our first roadmapping path is complete.
+\subsection{The construction of archimedean $L$-factors of $\rho_E$ using algebraic methods I: Galois cohomology and extended group cohomology}
+In the previous sketch, we have constructed and outlined a semi-explicit definition of a $p$-adic Euler factor of $\rho_E$ using non-archimedean rhombuses. In this construction, we will rely on constructing Euler factors of the form
+\[ L_{\infty}(\rho, s) \]
+in the intuitive sense. One must first, however, examine the precise nature of Galois cohomology, archimedean group cohomology for non-$p$-torsion points of $X$. So, we will be dealing with an overall pseudo-algebraic complex analytic formalism. Recall the complex model of a formal analytic spectrum as object(s) (11) and (12). Then we generalize this to any (sufficiently "algebraic") group $G$ as:
+\[G_z := X^{\on{ca}}_z/G\]
+for all $z \in X(\mathbb{C})$. The unbracketed quotient implies that we cosntruct the $G$-equivariant variety associated to $X^{\on{ca}}_z$.
+\end{document}
+
